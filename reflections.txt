@@ -1,0 +1,13 @@
+This file contains the reflections made on the tuning process involved in achieving the final performance of the PID controller.
+
+A manual tuning approach was taken to adjust the parameters of the PID controller with a target of making the car run a complete lap around the simulator track without leaving the drivable surface and without any movements considered unsafe for riders. 
+
+Our application of PID controller is used to calculate the steering angle that acts as a correction applied to decrease the CTE (cross track error) of the vehicle. The correction applied is calculated as a function of the CTE itself (proportional term), rate of change of CTE (differential term) and the sum of CTEs (integral term) at the time of calculation. 
+
+Each of the P, I and D terms of the correction involve two factors, a coefficient and a variable. The variables are p_error, i_error and d_error while the coefficients are Kp, Ki and Kd respectively. The errors are functions of CTE and the corresponding coefficients determine the weight of each term in the correction (steering angle calculated). 
+
+Tuning involves finding the combination of the coefficients such that the correction being calculated can be used to steer the vehicle on the given track without any manoeuvres that are considered unsafe. 
+
+With the manual tuning approach, I started out with only the proportional term with Kp = -1 (all coefficients are negative since steering angle is inversly proportional CTE) and kept Ki and Kd as 0. This kept making the vehicle overshoot the 0 error point and oscillate from left to right while the amplitude kept increasing. To decrease the overshooting, I decreased Kp to -0.5 while I added the differential term with Kd = -1 to make the transition to the 0 CTE point more gradual which would also decrease the overshooting. This gave me pretty good results since the car was now not leaving the drivable part of the track. But there was still some oscillations. I slowly reduced the Kp term and got significantly better results when I reached the value of Kp = -0.15, also I got better results with Kd = -0.9! Then I added the integral term to account for any offset in the alignment of the steering wheels of the car with a very small Ki value of -0.0005. 
+
+This was how the final PID parameter values of Kp = -0.15, Kd = -0.9 and Ki = -0.0005 was arrived at to achieve an acceptable steering performance of the car on the udacity's simulator track. 
